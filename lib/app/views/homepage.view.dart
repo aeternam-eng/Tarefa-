@@ -125,8 +125,8 @@ class _HomePageState extends State<HomePage> {
                   decoration: InputDecoration(labelText: "Tarefa"),
                 ),
                 Container(
-                  height: 200,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 250,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.dateAndTime,
                     initialDateTime: DateTime.now().add(Duration(hours: 1)),
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                         selectedDate = newDateTime;
                       });
                     },
-                    use24hFormat: false,
+                    use24hFormat: true,
                     minuteInterval: 1,
                   ),
                 ),
