@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onChanged: (c) {
                     _list[i].concluido = c;
-                    _controller.updateList(_list).then((data) {
+                    _controller.update(_list[i]).then((data) {
                       setState(() {
                         _list = _controller.list;
                       });

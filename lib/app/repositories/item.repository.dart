@@ -1,43 +1,100 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:mvc_persistence/app/models/item.model.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:mvc_persistence/app/settings.dart';
+
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ItemRepository {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  Future<Database> _getDB() async {
+    return openDatabase(
+      join(await getDatabasesPath(), DATABASE_NAME),
+      onCreate: (db, version) {
+        return db.execute(CREATE_LISTS_TABLE_SCRIPT);
+      },
+      version: 1,
+    );
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/data.json');
-  }
-
-  Future<List<Item>> readData() async {
+  Future create(Item item) async {
     try {
-      final file = await _localFile;
-      // Read the file
-      String dataJson = await file.readAsString();
-
-      List<Item> data =
-          (json.decode(dataJson) as List).map((i) => Item.fromJson(i)).toList();
-      return data;
+      final Database db = await _getDB();
+      await db.insert(
+        TABLE_NAME,
+        item.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } catch (e) {
-      return List<Item>();
+      print(e);
     }
   }
 
-  Future<bool> saveData(List<Item> list) async {
+  Future<List<Item>> getAll() async {
     try {
-      final file = await _localFile;
-      final String data = json.encode(list);
-      // Write the file
-      file.writeAsString(data);
-      return true;
+      final Database db = await _getDB();
+      final List<Map<String, dynamic>> maps = await db.query(TABLE_NAME);
+
+      return List.generate(
+        maps.length,
+        (index) => Item(
+          id: maps[index]['id'],
+          nome: maps[index]['nome'],
+          concluido: maps[index]['concluido'],
+          dueDate: maps[index]['duedate'],
+        ),
+      );
     } catch (e) {
-      return false;
+      print(e);
+      return new List<Item>();
+    }
+  }
+
+  Future<Item> read(int id) async {
+    try {
+      final Database db = await _getDB();
+      final List<Map<String, dynamic>> maps = await db.query(
+        TABLE_NAME,
+        where: "id = ?",
+        whereArgs: [id],
+      );
+
+      return Item(
+        id: maps[0]['id'],
+        nome: maps[0]['nome'],
+        concluido: maps[0]['concluido'],
+        dueDate: maps[0]['duedate'],
+      );
+    } catch (ex) {
+      print(ex);
+      return new Item();
+    }
+  }
+
+  Future update(Item item) async {
+    try {
+      final Database db = await _getDB();
+      await db.update(
+        TABLE_NAME,
+        item.toMap(),
+        where: "id = ?",
+        whereArgs: [item.id],
+      );
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
+  Future delete(int id) async {
+    try {
+      final Database db = await _getDB();
+      await db.delete(
+        TABLE_NAME,
+        where: "id = ?",
+        whereArgs: [id],
+      );
+    } catch (e) {
+      print(e);
+      return;
     }
   }
 }

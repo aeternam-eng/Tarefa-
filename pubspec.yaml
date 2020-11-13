@@ -33,6 +33,8 @@ dependencies:
   mobx: ^1.2.0
   flutter_mobx: ^1.1.0
   shared_preferences: '>=0.5.12 <2.0.0'
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:

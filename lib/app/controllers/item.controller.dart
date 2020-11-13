@@ -7,7 +7,7 @@ class ItemController {
 
   Future<void> getAll() async {
     try {
-      final allList = await repository.readData();
+      final allList = await repository.getAll();
       list.clear();
       list.addAll(allList);
       sort();
@@ -19,7 +19,7 @@ class ItemController {
   Future<void> create(Item item) async {
     try {
       list.add(item);
-      await update();
+      await repository.create(item);
     } catch (e) {
       print("Erro: " + e.toString());
     }
@@ -28,19 +28,14 @@ class ItemController {
   Future<void> delete(int id) async {
     try {
       list.removeAt(id);
-      await update();
+      await repository.delete(id);
     } catch (e) {
       print("Erro: " + e.toString());
     }
   }
 
-  Future<void> update() async {
-    await repository.saveData(list);
-    await getAll();
-  }
-
-  Future<void> updateList(List<Item> lista) async {
-    await repository.saveData(lista);
+  Future<void> update(Item item) async {
+    await repository.update(item);
     await getAll();
   }
 
