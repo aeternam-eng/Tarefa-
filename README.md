@@ -1,16 +1,15 @@
-# mvc_persistence
+# Tarefaê
 
-A new Flutter project.
+3º aplicativo desenvolvido para as aulas de LDDM do curso de Engenharia de Computação
 
-## Getting Started
+## Documentação
 
-This project is a starting point for a Flutter application.
+O aplicativo consiste de uma única tela, na qual é possível adicionar itens de texto na lista através de um FloatingActionButton, e removê-los através de botões à direita de cada item da lista. Idealmente, é uma ferramenta para gerenciar listas de tarefas, com controle de datas.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Estrutura
+1. main.dart (Inicializa o app);
+2. app.dart (Define e configura o MaterialApp, chama a Home Page);
+3. controllers (Item do MVC, declara as funções do model);
+4. views (Item do MVC, armazena as páginas do app);
+5. repositories (Item do MVC, lida com as operações de escrita e leitura em arquivo);
+6. models (Item do MVC, declara a estrutura dos dados);
